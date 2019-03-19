@@ -22,12 +22,8 @@ unsigned long time;
 
 unsigned long binTimeParts[4] = {0,0,0,0};
 float partFactors[4] = {
-//  float(1000) * float(60) * float(60),
-//  float(1000) * (float(60) / float(64)) * (float(60) / float(64)),
-//  float(1000) * (float(60) / float(64)),
   1000.0 * 60.0 * 60.0,
   (1000.0 * 60.0 * 60.0) / 64.0,
-  //1000.0 * (60.0 * (60.0 / 64.0)) * (60.0 * (60.0 / 64.0)),
   (1000.0 * 60.0) / 64.0,
   float(1)
 };
@@ -58,10 +54,6 @@ void setupLeds()
 void loop()
 {
   refreshBinTimeParts();
-  //Serial.println("Hours: " + String(binTimeParts[0]));
-  //Serial.println("Mins: " + String(binTimeParts[1]));
-  //Serial.println("Secs: " + String(binTimeParts[2]));
-  //Serial.println("MS: " + String(binTimeParts[3]));
   
   //readTime();
   printReport();
@@ -73,14 +65,10 @@ void refreshBinTimeParts()
 {
   unsigned int now = readTime();
   unsigned int rem = now;
-  //Serial.println("int(millis())="+String(millis())+", now=" + String(now) +", rem=" + String(rem));
   for(int i = 0; i < 4; i++)
   {
     binTimeParts[i] = (unsigned int)(float(rem) / partFactors[i]);//floor(rem / partFactors[i]);
     rem -= binTimeParts[i];
-    //Serial.println("now=" + String(now, DEC) + ", i="+i+", part=" + String(binTimeParts[i]) + ", rem=" + String(rem));
-    //= fmod(rem, partFactors[i]);
-    //binTimeParts[i] = now;
   }
 }
 

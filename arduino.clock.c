@@ -15,6 +15,7 @@ int secLeds[3] = {9,10,11};
 
 // Offset from midnight
 //unsigned long offsetTime = 0;
+// 24 hours = 86400000 ms
 unsigned long offsetTime = 26400000L;
 
 // offsetTime + millis()
@@ -24,7 +25,8 @@ unsigned long binTimeParts[4] = {0,0,0,0};
 float partFactors[4] = {
   1000.0 * 60.0 * 60.0,
   (1000.0 * 60.0 * 60.0) / 64.0,
-  (1000.0 * 60.0) / 64.0,
+  ((1000.0 * 60.0 * 60.0) / 64.0) / 64.0,
+  //(1000.0 * 60.0) / 64.0,
   float(1)
 };
 
@@ -81,9 +83,17 @@ unsigned int readTime()
 void printReport()
 {
   char buffer[32];
+  Serial.println("Factors "
+     +  "Hours="+String(partFactors[0])
+     +", Mins="+String(partFactors[1])
+     +", Secs="+String(partFactors[2])
+     +", MS="+String(partFactors[3])
+  );
+  
   sprintf(buffer, "time=%lu", time);
   Serial.println(buffer);
-  sprintf(buffer, "Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
+  
+  sprintf(buffer, "Parts Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
     binTimeParts[0], binTimeParts[1],
     binTimeParts[2], binTimeParts[3]
   );

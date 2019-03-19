@@ -3,9 +3,26 @@
 #include <Adafruit_NeoPixel.h>
 Adafruit_NeoPixel leds = Adafruit_NeoPixel(N_LEDS, LEDS_PIN, NEO_GRB + NEO_KHZ800);
 
-int hourLeds[3] = {1,2,3};
-int minLeds[3] = {5,6,7};
-int secLeds[3] = {9,10,11};
+int ledMap[][3] = {
+  // hours
+  {1,2,3},
+  // min
+  {5,6,7},
+  // sec
+  {9,10,11}
+};
+
+// colors described as RGB
+int bitColors[][3] = {
+  // 00 = BLACK
+  {0,0,0},
+  // 01 = RED
+  {255,0,0},
+  // 10 = GREEN
+  {0,255,0},
+  // 11 = BLUD
+  {0,0,255}
+};
 
 // Mon 18 March 2019
 // 12:41:54
@@ -51,8 +68,8 @@ void loop()
 {
   refreshBinTimeParts();
   
-  //printReport();
-  
+  printReport();
+  leds.setPixelColor(8, 255,0,0);
   delay(1000);
 }
 

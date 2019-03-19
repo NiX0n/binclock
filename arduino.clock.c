@@ -41,8 +41,8 @@ unsigned long binTimeParts[4] = {0,0,0,0};
 unsigned long partFactors[4] = {
   1000L * 60L * 60L,
   (1000L * 60L * 60L) / 64L,
-  round(((1000L * 60L * 60L) / 64L) / 64L),
-  1L//float(1)
+  round(((1000L * 60L * 60L) / 64L) / 64L)//,
+  //1L
 };
 
 void setup()
@@ -67,8 +67,20 @@ void setupLeds()
 void loop()
 {
   refreshBinTimeParts();
-  
-  printReport();
+  for(int p = 2; p >= 0; p--)
+  {
+    int bits = binTimeParts[p];
+    for(int ledigit = sizeof(ledMap[p]); ledigit >= 0; ledigit--)
+    {
+      int ledBits = bits & 3; // 3D=11B
+      //int bitColor[3] = bitColors[ledBits];
+      bits = bits >> 2;
+      //leds.setPixelColor(ledMap[p][ledigit - 1], bitColor[0],bitColor[1], bitColor[2]);
+      leds.setPixelColor(ledMap[p][ledigit - 1], bitColors[ledBits][0],bitColors[ledBits][1], bitColors[ledBits][2]);
+    }
+  }
+  leds.show();
+  //printReport();
   leds.setPixelColor(8, 255,0,0);
   delay(1000);
 }

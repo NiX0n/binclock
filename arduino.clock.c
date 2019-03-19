@@ -67,8 +67,7 @@ void loop()
 
 void refreshBinTimeParts()
 {
-  unsigned long now = readTime();
-  unsigned long rem = now;
+  unsigned long rem = readTime();
   for(int i = 0; i < 4; i++)
   {
     binTimeParts[i] = rem / partFactors[i];

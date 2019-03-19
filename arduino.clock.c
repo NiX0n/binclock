@@ -57,13 +57,13 @@ void setupLeds()
 
 void loop()
 {
-  //refreshBinTimeParts();
+  refreshBinTimeParts();
   //Serial.println("Hours: " + String(binTimeParts[0]));
   //Serial.println("Mins: " + String(binTimeParts[1]));
   //Serial.println("Secs: " + String(binTimeParts[2]));
   //Serial.println("MS: " + String(binTimeParts[3]));
   
-  readTime();
+  //readTime();
   printReport();
   
   delay(1000);
@@ -94,5 +94,10 @@ void printReport()
 {
   char buffer[32];
   sprintf(buffer, "time=%lu", time);
+  Serial.println(buffer);
+  sprintf(buffer, "Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
+    binTimeParts[0], binTimeParts[1],
+    binTimeParts[2], binTimeParts[3]
+  );
   Serial.println(buffer);
 }

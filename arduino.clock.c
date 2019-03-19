@@ -15,10 +15,10 @@ int secLeds[3] = {9,10,11};
 
 // Offset from midnight
 //unsigned long offsetTime = 0;
-unsigned long offsetTime = 26400000L;
+unsigned int offsetTime = 26400000L;
 
 // offsetTime + millis()
-unsigned long time = 26400000L;
+unsigned int time = 26400000;
 
 unsigned long binTimeParts[4] = {0,0,0,0};
 float partFactors[4] = {
@@ -76,12 +76,12 @@ void loop()
 
 void refreshBinTimeParts()
 {
-  unsigned long now = readTime();
-  unsigned long rem = now;
+  unsigned int now = readTime();
+  unsigned int rem = now;
   Serial.println("int(millis())="+String(millis())+", now=" + String(now) +", rem=" + String(rem));
   for(int i = 0; i < 4; i++)
   {
-    binTimeParts[i] = (unsigned long)(float(rem) / partFactors[i]);//floor(rem / partFactors[i]);
+    binTimeParts[i] = (unsigned int)(float(rem) / partFactors[i]);//floor(rem / partFactors[i]);
     rem -= binTimeParts[i];
     Serial.println("now=" + String(now, DEC) + ", i="+i+", part=" + String(binTimeParts[i]) + ", rem=" + String(rem));
     //= fmod(rem, partFactors[i]);

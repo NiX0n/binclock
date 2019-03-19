@@ -17,19 +17,19 @@ int secLeds[3] = {9,10,11};
 //unsigned long offsetTime = 0;
 // 24 hours = 86400000 ms
 // MAX_INT =  65535
-//unsigned long offsetTime = 26400000L;
-unsigned long offsetTime = 26400L;
+unsigned long offsetTime = 26400000L;
+//unsigned long offsetTime = 26400L;
 
 // offsetTime + millis()
 unsigned long time;
 
 unsigned long binTimeParts[4] = {0,0,0,0};
-float partFactors[4] = {
-  1000.0 * 60.0 * 60.0,
-  (1000.0 * 60.0 * 60.0) / 64.0,
-  ((1000.0 * 60.0 * 60.0) / 64.0) / 64.0,
+unsigned long partFactors[4] = {
+  1000L * 60L * 60L,
+  (1000L * 60L * 60L) / 64L,
+  round(((1000L * 60L * 60L) / 64L) / 64L),
   //(1000.0 * 60.0) / 64.0,
-  float(1)
+  1L//float(1)
 };
 
 void setup()
@@ -67,17 +67,16 @@ void loop()
 
 void refreshBinTimeParts()
 {
-  unsigned int now = readTime();
-  unsigned int rem = now;
+  unsigned long now = readTime();
+  unsigned long rem = now;
   for(int i = 0; i < 4; i++)
   {
-    //binTimeParts[i] = (unsigned int)(float(rem) / partFactors[i]);//floor(rem / partFactors[i]);
-    binTimeParts[i] = (unsigned int)(rem / partFactors[i]);//floor(rem / partFactors[i]);
+    binTimeParts[i] = rem / partFactors[i];
     rem -= binTimeParts[i];
   }
 }
 
-unsigned int readTime()
+unsigned long readTime()
 {
   time = offsetTime + millis();
   return time;
@@ -86,19 +85,29 @@ unsigned int readTime()
 void printReport()
 {
   char buffer[32];
-  Serial.println(
-    "Factors Hours="+String(partFactors[0])
-     +", Mins="+String(partFactors[1])
-     +", Secs="+String(partFactors[2])
-     +", MS="+String(partFactors[3])
+  char buffer2[32];
+  char buffer3[32];
+  //Serial.println(
+  //  "Factors Hours="+String(partFactors[0])
+  //   +", Mins="+String(partFactors[1])
+  //   +", Secs="+String(partFactors[2])
+  //   +", MS="+String(partFactors[3])
+  //);
+  sprintf(buffer2, "Factors Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
+    partFactors[0], partFactors[1],
+    partFactors[2], partFactors[3]
   );
+  Serial.println(buffer2);
+  memset(buffer2, 0, sizeof(buffer));
   
-  sprintf(buffer, "time=%lu", time);
+  sprintf(buffer, "time=%lu, math=%lu", time, 26402092L/3600000L);
   Serial.println(buffer);
+  memset(buffer, 0, sizeof(buffer));
   
-  sprintf(buffer, "Parts Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
+  sprintf(buffer3, "Parts Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
     binTimeParts[0], binTimeParts[1],
     binTimeParts[2], binTimeParts[3]
   );
-  Serial.println(buffer);
+  Serial.println(buffer3);
+  memset(buffer3, 0, sizeof(buffer));
 }

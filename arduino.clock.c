@@ -69,20 +69,25 @@ void loop()
   refreshBinTimeParts();
   for(int p = 2; p >= 0; p--)
   {
-    int bits = binTimeParts[p];
-    for(int ledigit = sizeof(ledMap[p]); ledigit >= 0; ledigit--)
+    unsigned long bits = binTimeParts[p];
+    //Serial.println("init bits=" + String(bits, BIN));
+    for(int ledigit = 2; ledigit >= 0; ledigit--)
     {
-      int ledBits = bits & 3; // 3D=11B
+      //Serial.println("p=" + String(p) + ", ledigit=" + String(ledigit));
+      int ledBits = bits & 3L; // 3D=11B
+      //Serial.println("ledBits=" + String(ledBits));
       //int bitColor[3] = bitColors[ledBits];
       bits = bits >> 2;
+      //Serial.println("bits=" + String(bits));
+      //Serial.println("led=" + String(ledMap[p][ledigit - 1]));
       //leds.setPixelColor(ledMap[p][ledigit - 1], bitColor[0],bitColor[1], bitColor[2]);
-      leds.setPixelColor(ledMap[p][ledigit - 1], bitColors[ledBits][0],bitColors[ledBits][1], bitColors[ledBits][2]);
+      leds.setPixelColor(ledMap[p][ledigit], bitColors[ledBits][0],bitColors[ledBits][1], bitColors[ledBits][2]);
     }
   }
+  //leds.setPixelColor(8, 0,0,255);
   leds.show();
   //printReport();
-  leds.setPixelColor(8, 255,0,0);
-  delay(1000);
+  delay(200);
 }
 
 void refreshBinTimeParts()

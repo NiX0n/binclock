@@ -71,7 +71,7 @@ void refreshBinTimeParts()
   for(int i = 0; i < 4; i++)
   {
     binTimeParts[i] = rem / partFactors[i];
-    rem -= binTimeParts[i];
+    rem -= binTimeParts[i] * partFactors[i];
   }
 }
 

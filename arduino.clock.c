@@ -15,10 +15,10 @@ int secLeds[3] = {9,10,11};
 
 // Offset from midnight
 //unsigned long offsetTime = 0;
-unsigned int offsetTime = 26400000L;
+unsigned long offsetTime = 26400000L;
 
 // offsetTime + millis()
-unsigned long time = 26400000;
+unsigned long time;
 
 unsigned long binTimeParts[4] = {0,0,0,0};
 float partFactors[4] = {
@@ -36,7 +36,7 @@ void setup()
 {
   setupSerial();
   setupLeds();
-  printReport();
+  //printReport();
   //Serial.println("PFs: " + String(partFactors[0]));
   //Serial.println("PFs: " + String(partFactors[1]));
   //Serial.println("PFs: " + String(partFactors[2]));
@@ -63,14 +63,9 @@ void loop()
   //Serial.println("Secs: " + String(binTimeParts[2]));
   //Serial.println("MS: " + String(binTimeParts[3]));
   
-  //unsigned long now = readTime();
-  //Serial.println("Start Time: " + String(startTime, DEC));
-  //Serial.println("Time: " + String(now));
-  //Serial.println("MS: " + String(millis(), DEC));//String(now));
-  //digitalWrite(13, HIGH);
-  //delay(1000); // Wait for 1000 millisecond(s)
-  //digitalWrite(13, LOW);
-  //delay(1000); // Wait for 1000 millisecond(s)
+  readTime();
+  printReport();
+  
   delay(1000);
 }
 
@@ -78,12 +73,12 @@ void refreshBinTimeParts()
 {
   unsigned int now = readTime();
   unsigned int rem = now;
-  Serial.println("int(millis())="+String(millis())+", now=" + String(now) +", rem=" + String(rem));
+  //Serial.println("int(millis())="+String(millis())+", now=" + String(now) +", rem=" + String(rem));
   for(int i = 0; i < 4; i++)
   {
     binTimeParts[i] = (unsigned int)(float(rem) / partFactors[i]);//floor(rem / partFactors[i]);
     rem -= binTimeParts[i];
-    Serial.println("now=" + String(now, DEC) + ", i="+i+", part=" + String(binTimeParts[i]) + ", rem=" + String(rem));
+    //Serial.println("now=" + String(now, DEC) + ", i="+i+", part=" + String(binTimeParts[i]) + ", rem=" + String(rem));
     //= fmod(rem, partFactors[i]);
     //binTimeParts[i] = now;
   }
@@ -91,12 +86,7 @@ void refreshBinTimeParts()
 
 unsigned int readTime()
 {
-  //time = ((unsigned long)(offsetTime)) + ((unsigned long)(millis()));
-  //time = offsetTime;
-  Serial.println(
-    "cast(millis())="+String(((unsigned long)(millis())))
-    +", offsetTime=" + String(((unsigned long)(offsetTime))) 
-    +", time=" + String(time));
+  time = offsetTime + millis();
   return time;
 }
 

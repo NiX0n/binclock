@@ -18,7 +18,7 @@ int secLeds[3] = {9,10,11};
 unsigned int offsetTime = 26400000L;
 
 // offsetTime + millis()
-unsigned int time = 26400000;
+unsigned long time = 26400000;
 
 unsigned long binTimeParts[4] = {0,0,0,0};
 float partFactors[4] = {
@@ -36,10 +36,10 @@ void setup()
 {
   setupSerial();
   setupLeds();
-  
-  Serial.println("PFs: " + String(partFactors[0]));
-  Serial.println("PFs: " + String(partFactors[1]));
-  Serial.println("PFs: " + String(partFactors[2]));
+  printReport();
+  //Serial.println("PFs: " + String(partFactors[0]));
+  //Serial.println("PFs: " + String(partFactors[1]));
+  //Serial.println("PFs: " + String(partFactors[2]));
 }
 
 void setupSerial()
@@ -57,7 +57,7 @@ void setupLeds()
 
 void loop()
 {
-  refreshBinTimeParts();
+  //refreshBinTimeParts();
   //Serial.println("Hours: " + String(binTimeParts[0]));
   //Serial.println("Mins: " + String(binTimeParts[1]));
   //Serial.println("Secs: " + String(binTimeParts[2]));
@@ -98,4 +98,11 @@ unsigned int readTime()
     +", offsetTime=" + String(((unsigned long)(offsetTime))) 
     +", time=" + String(time));
   return time;
+}
+
+void printReport()
+{
+  char buffer[32];
+  sprintf(buffer, "time=%lu", time);
+  Serial.println(buffer);
 }

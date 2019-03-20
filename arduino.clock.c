@@ -67,9 +67,18 @@ void setupLeds()
 void loop()
 {
 	refreshBinTimeParts();
+	// operating little-endian first to right-justify digits
 	for(int row = 2; row >= 0; row--)
 	{
 		unsigned long bits = binTimeParts[row];
+		// special handling of hour row
+		if(row == 0)
+		{
+			// day quadrant
+			unsigned long quadiem = bits / 6L;
+			// use 12 hour clock, and set left-most bits to quadiem
+			bits = (bits % 12) + (quadiem << 4);
+		}
 		for(int col = 2; col >= 0; col--)
 		{
 			// twits=twin+bits

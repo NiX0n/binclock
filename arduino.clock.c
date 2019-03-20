@@ -13,7 +13,7 @@ int ledMap[][3] = {
 };
 
 // colors described as RGB
-int bitColors[][3] = {
+int colorMap[][3] = {
 	// 00 = BLACK
 	{0,0,0},
 	// 01 = RED
@@ -67,21 +67,16 @@ void setupLeds()
 void loop()
 {
 	refreshBinTimeParts();
-	for(int p = 2; p >= 0; p--)
+	for(int row = 2; row >= 0; row--)
 	{
-		unsigned long bits = binTimeParts[p];
-		//Serial.println("init bits=" + String(bits, BIN));
-		for(int ledigit = 2; ledigit >= 0; ledigit--)
+		unsigned long bits = binTimeParts[row];
+		for(int col = 2; col >= 0; col--)
 		{
-			//Serial.println("p=" + String(p) + ", ledigit=" + String(ledigit));
-			int ledBits = bits & 3L; // 3D=11B
-			//Serial.println("ledBits=" + String(ledBits));
-			//int bitColor[3] = bitColors[ledBits];
+			// twits=twin+bits
+			int twits = bits & 3L; // 3D=11B
+			//int bitColor[3] = bitColors[twits];
 			bits = bits >> 2;
-			//Serial.println("bits=" + String(bits));
-			//Serial.println("led=" + String(ledMap[p][ledigit - 1]));
-			//leds.setPixelColor(ledMap[p][ledigit - 1], bitColor[0],bitColor[1], bitColor[2]);
-			leds.setPixelColor(ledMap[p][ledigit], bitColors[ledBits][0],bitColors[ledBits][1], bitColors[ledBits][2]);
+			leds.setPixelColor(ledMap[row][col], colorMap[twits][0],colorMap[twits][1], colorMap[twits][2]);
 		}
 	}
 	//leds.setPixelColor(8, 0,0,255);

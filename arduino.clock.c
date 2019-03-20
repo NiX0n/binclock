@@ -32,7 +32,7 @@ int bitColors[][3] = {
 //unsigned long offsetTime = 0;
 // 24 hours = 86400000 ms
 // MAX_INT =  65535
-unsigned long offsetTime = 26400000L;
+unsigned long offsetTime = 46800000L;//26400000L;
 
 // offsetTime + millis()
 unsigned long time;
@@ -102,8 +102,9 @@ void refreshBinTimeParts()
 
 unsigned long readTime()
 {
-  time = offsetTime + millis();
-  return time;
+	// keep time under 24 hours
+	time = (offsetTime + millis()) % (24L * partFactors[0]);
+	return time;
 }
 
 void printReport()

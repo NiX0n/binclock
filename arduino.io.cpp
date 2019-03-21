@@ -1,3 +1,5 @@
+String date;
+
 void setup()
 {
 	pinMode(LED_BUILTIN, OUTPUT);
@@ -9,8 +11,7 @@ void loop()
 	String in = readSerial();
 	if(in.length() > 0)
 	{
-		Serial.println(in);
-		parseIn(in);
+		processIn(in);
 	}
 	delay(1000);
 }
@@ -30,17 +31,34 @@ String readSerial()
 	return ret;
 }
 
-void parseIn(String in)
+void processIn(String in)
 {
+	Serial.println(in);
+
 	String cmd;
 	cmd = "date set "; if(in.startsWith(cmd))
 	{
 		setDate(in.substring(cmd.length()));
 		return;
 	}
+	
+	cmd = "date get"; if(in.startsWith(cmd))
+	{
+		getDate();
+		return;
+	}
+	
+	Serial.println("ERROR: Command not found");
 }
 
 void setDate(String __date)
 {
 	Serial.println("setDate():" + __date);
+	date = __date;
+}
+
+void getDate()
+{
+	Serial.println("getDate():" + date);
+	//return date;	
 }

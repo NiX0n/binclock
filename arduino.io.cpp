@@ -5,13 +5,14 @@
 String date;
 
 // String position map of ISO8601-formatted date
-int posMapISO8601[][2] {
+int posMapISO8601[][2] = {
 	// year,  month,   day
 	{0,  4}, {5,  2}, {8,  2},
 	// hour,  minute,  second
 	{11, 2}, {14, 2}, {17, 2}
 };
 
+int datetime[6] = {0,0,0,0,0,0};
 
 void setup()
 {
@@ -72,6 +73,14 @@ void setDate(String __date)
 {
 	__date = __date.trim();
 	Serial.println("setDate():" + __date);
+	for(int i = 0; i < sizeof(datetime); i++)
+	{
+		datetime[i] = int(__date.substring(
+			posMapISO8601[i][0], 
+			posMapISO8601[i][0] + posMapISO8601[i][1]
+		));
+		Serial.println("datetime[" + String(i) "]=" + String(datetime[i]));
+	}
 	date = __date;
 }
 

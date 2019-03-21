@@ -17,11 +17,14 @@ void loop()
 String readSerial()
 {
 	String ret = "";
-	while(Serial.available() > 0)
+	if(Serial.available() > 0)
 	{
 		digitalWrite(LED_BUILTIN, HIGH);
-		ret += (char)Serial.read();
+		do 
+		{
+			ret += (char)Serial.read();
+		} while(Serial.available() > 0);
+		digitalWrite(LED_BUILTIN, LOW);
 	}
-	digitalWrite(LED_BUILTIN, LOW);
 	return ret;
 }

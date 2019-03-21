@@ -69,19 +69,21 @@ void processIn(String in)
  * @param String __date expected to be in ISO-8601 format
  * Example: 2019-03-21T09:37:59-04:00
  */
-void setDate(String __date)
+void setDate(String d)
 {
-	__date = __date.trim();
-	Serial.println("setDate():" + __date);
-	for(int i = 0; i < sizeof(datetime); i++)
+	d.trim();
+	Serial.println("setDate():" + d);
+	for(int i = 0; i < 6; i++)//sizeof(datetime)
 	{
-		datetime[i] = int(__date.substring(
+		String dp = d.substring(
 			posMapISO8601[i][0], 
 			posMapISO8601[i][0] + posMapISO8601[i][1]
-		));
-		Serial.println("datetime[" + String(i) "]=" + String(datetime[i]));
+		)
+		Serial.println("dp[" + String(i) + "]=" + dp;
+		datetime[i] =  dp.toInt();
+		Serial.println("datetime[" + String(i) + "]=" + String(datetime[i]));
 	}
-	date = __date;
+	date = d;
 }
 
 void getDate()

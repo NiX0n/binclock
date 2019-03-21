@@ -10,6 +10,7 @@ void loop()
 	if(in.length() > 0)
 	{
 		Serial.println(in);
+		parseIn(in);
 	}
 	delay(1000);
 }

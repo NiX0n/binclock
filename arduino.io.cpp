@@ -33,7 +33,7 @@ String readSerial()
 
 void processIn(String in)
 {
-	Serial.println(in);
+	Serial.println("> " + in);
 
 	String cmd;
 	cmd = "date set "; if(in.startsWith(cmd))

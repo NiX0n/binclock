@@ -1,3 +1,7 @@
+// For piping date into Serial
+// Example: echo "date set $(date -Iseconds)" > /dev/ttyUSB0
+// @see http://playground.arduino.cc/Interfacing/LinuxTTY
+
 String date;
 
 void setup()

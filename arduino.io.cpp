@@ -78,8 +78,8 @@ void setDate(String d)
 		String dp = d.substring(
 			posMapISO8601[i][0], 
 			posMapISO8601[i][0] + posMapISO8601[i][1]
-		)
-		Serial.println("dp[" + String(i) + "]=" + dp;
+		);
+		Serial.println("dp[" + String(i) + "]=" + dp);
 		datetime[i] =  dp.toInt();
 		Serial.println("datetime[" + String(i) + "]=" + String(datetime[i]));
 	}

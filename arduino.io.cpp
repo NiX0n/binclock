@@ -28,3 +28,18 @@ String readSerial()
 	}
 	return ret;
 }
+
+void parseIn(String in)
+{
+	String cmd;
+	cmd = "date set "; if(in.startsWith(cmd))
+	{
+		setDate(in.substring(cmd.length()));
+		return;
+	}
+}
+
+void setDate(String __date)
+{
+	Serial.println("setDate():" + __date);
+}

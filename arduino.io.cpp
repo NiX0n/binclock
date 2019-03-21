@@ -75,13 +75,16 @@ void setDate(String d)
 	Serial.println("setDate():" + d);
 	for(int i = 0; i < 6; i++)//sizeof(datetime)
 	{
-		String dp = d.substring(
+		//String dp = 
+		datetime[i] =  d.substring(
 			posMapISO8601[i][0], 
 			posMapISO8601[i][0] + posMapISO8601[i][1]
-		);
-		Serial.println("dp[" + String(i) + "]=" + dp);
-		datetime[i] =  parseInt(dp);//dp.toInt();
-		Serial.println("datetime[" + String(i) + "]=" + String(datetime[i]));
+		).toInt();
+		//parseInt(dp);
+		char buffer[32];
+		sprintf(buffer, "datetime[%d]=%d", i, datetime[i]);
+		Serial.println(buffer);
+		//Serial.println("datetime[" + String(i) + "]=" + String(datetime[i]));
 	}
 	date = d;
 }
@@ -90,14 +93,4 @@ void getDate()
 {
 	Serial.println("getDate():" + date);
 	//return date;	
-}
-
-int parseInt(String s)
-{
-	int i = 0;
-	for(int pos = 0; pos < s.length(); pos++)
-	{
-		i += s.substring(i * -1, (i * -1) + 1).toInt() * pow(10, pos);
-	}
-	return i;
 }

@@ -80,7 +80,7 @@ void setDate(String d)
 			posMapISO8601[i][0] + posMapISO8601[i][1]
 		);
 		Serial.println("dp[" + String(i) + "]=" + dp);
-		datetime[i] =  dp.toInt();
+		datetime[i] =  parseInt(dp);//dp.toInt();
 		Serial.println("datetime[" + String(i) + "]=" + String(datetime[i]));
 	}
 	date = d;
@@ -90,4 +90,14 @@ void getDate()
 {
 	Serial.println("getDate():" + date);
 	//return date;	
+}
+
+int parseInt(String s)
+{
+	int i = 0;
+	for(int pos = 0; pos < s.length(); pos++)
+	{
+		i += s.substring(i * -1, (i * -1) + 1).toInt() * pow(10, pos);
+	}
+	return i;
 }

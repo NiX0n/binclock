@@ -2,6 +2,7 @@
 // Example: echo "date set $(date -Iseconds)" > /dev/ttyUSB0
 // @see http://playground.arduino.cc/Interfacing/LinuxTTY
 
+// Simple storage of imput string for later recall
 String date;
 
 // String position map of ISO8601-formatted date
@@ -12,6 +13,10 @@ int posMapISO8601[][2] = {
 	{11, 2}, {14, 2}, {17, 2}
 };
 
+// Breakdown of date time parts
+// Using posMapISO8601
+// This is representative of the arguments
+// passed into RTC->setDate();
 int datetime[6] = {0,0,0,0,0,0};
 
 void setup()
@@ -50,6 +55,12 @@ void processIn(String in)
 	Serial.println("> " + in);
 
 	String cmd;
+	cmd = "help"; if(in.startsWith(cmd))
+	{
+		// printHelp();
+		return;
+	}
+	
 	cmd = "date set "; if(in.startsWith(cmd))
 	{
 		setDate(in.substring(cmd.length()));
@@ -72,7 +83,6 @@ void processIn(String in)
 void setDate(String d)
 {
 	d.trim();
-	Serial.println("setDate():" + d);
 	for(int i = 0; i < 6; i++)//sizeof(datetime)
 	{
 		//String dp = 
@@ -80,17 +90,16 @@ void setDate(String d)
 			posMapISO8601[i][0], 
 			posMapISO8601[i][0] + posMapISO8601[i][1]
 		).toInt();
-		//parseInt(dp);
 		char buffer[32];
 		sprintf(buffer, "datetime[%d]=%d", i, datetime[i]);
 		Serial.println(buffer);
-		//Serial.println("datetime[" + String(i) + "]=" + String(datetime[i]));
 	}
 	date = d;
+	Serial.println("date=" + d);
 }
 
 void getDate()
 {
-	Serial.println("getDate():" + date);
+	Serial.println(date);
 	//return date;	
 }

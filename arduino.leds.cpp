@@ -4,6 +4,8 @@
 #define N_LEDS 9
 #define LEDS_DATA_PIN 6
 #define LEDS_CLOCK_PIN 7
+#define LED_BRIGHTNESS  64
+
 #define SERIAL_BAUD 115200
 
 #include "FastLED.h"
@@ -29,8 +31,10 @@ void setupLeds()
 
 void loop()
 {
-	leds[0] = CRGB::White;
-	leds[1] = CRGB::Red;
+	for(int i = 0; i < N_LEDS; i++)
+	{
+		leds[i] = random(0xFFFFFF);
+	}
 	FastLED.show();
-	delay(1000);
+    FastLED.delay(2000 / UPDATES_PER_SECOND);
 }

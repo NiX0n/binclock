@@ -36,5 +36,5 @@ void loop()
 		leds[i] = random(0xFFFFFF);
 	}
 	FastLED.show();
-    FastLED.delay(2000 / UPDATES_PER_SECOND);
+	FastLED.delay(2000 / UPDATES_PER_SECOND);
 }

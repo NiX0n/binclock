@@ -8,3 +8,18 @@
 
 #include <SPI.h>
 #include "SparkFunDS3234RTC.h"
+
+void setup()
+{
+	
+}
+
+void setupRtc()
+{
+	rtc.begin(DS13074_CS_PIN);
+}
+
+void loop()
+{
+	
+}

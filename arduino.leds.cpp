@@ -26,6 +26,7 @@ void setupSerial()
 void setupLeds()
 {
 	FastLED.addLeds<APA102, LEDS_DATA_PIN, LEDS_CLOCK_PIN, RGB>(leds, N_LEDS);
+	FastLED.setBrightness(LED_BRIGHTNESS);
 	pinMode(LED_BUILTIN, OUTPUT);
 }
 

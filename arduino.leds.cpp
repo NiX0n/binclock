@@ -1,3 +1,6 @@
+// References:
+// https://learn.sparkfun.com/tutorials/lumenati-hookup-guide
+
 #define N_LEDS 9
 #define LEDS_DATA_PIN 6
 #define LEDS_CLOCK_PIN 7

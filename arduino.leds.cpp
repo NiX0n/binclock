@@ -1,6 +1,8 @@
 #define N_LEDS 9
-#define LEDS_PIN 6
+#define LEDS_DATA_PIN 6
+#define LEDS_CLOCK_PIN 7
 #define SERIAL_BAUD 115200
+
 #include "FastLED.h"
 
 CRGB leds[N_LEDS];
@@ -18,7 +20,7 @@ void setupSerial()
 
 void setupLeds()
 {
-	FastLED.addLeds<WS2812B, LEDS_PIN>(leds, N_LEDS);
+	FastLED.addLeds<APA102, LEDS_DATA_PIN, LEDS_CLOCK_PIN, RGB>(leds, N_LEDS);
 	pinMode(LED_BUILTIN, OUTPUT);
 }
 

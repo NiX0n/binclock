@@ -27,6 +27,7 @@ void setupLeds()
 {
 	FastLED.addLeds<APA102, LEDS_DATA_PIN, LEDS_CLOCK_PIN, RGB>(leds, N_LEDS);
 	FastLED.setBrightness(LED_BRIGHTNESS);
+	FastLED.setMaxRefreshRate(1);
 	pinMode(LED_BUILTIN, OUTPUT);
 }
 
@@ -37,5 +38,6 @@ void loop()
 		leds[i] = random(0xFFFFFF);
 	}
 	FastLED.show();
-	FastLED.delay(2000 / UPDATES_PER_SECOND);
+	delay(1000);
+	//FastLED.delay(2000 / UPDATES_PER_SECOND);
 }

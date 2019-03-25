@@ -25,6 +25,29 @@
 
 CRGB leds[N_LEDS];
 
+int ledMap[][3] = {
+	// hours
+	{0,1,2},
+	// min
+	{3,4,5},
+	// sec
+	{6,7,8}
+};
+
+// colors described as RGB
+int colorMap[][3] = {
+	// 00 = BLACK
+	0x000000,
+	// 01 = RED
+	0xFF0000,
+	// 10 = GREEN
+	0x00FF00,
+	// 11 = BLUE
+	0x0000FF
+};
+
+unsigned long btParts[3] = {0,0,0};
+
 void setup()
 {
 	setupSerial();
@@ -58,22 +81,37 @@ void loop()
 
 void renderTime()
 {
-	refreshBinTimeParts();
+	updateBTParts();
 	// operating little-endian first to right-justify digits
 	for(int row = 2; row >= 0; row--)
 	{
-		unsigned long bits = binTimeParts[row];
+		unsigned long bits = btParts[row];
 		for(int col = 2; col >= 0; col--)
 		{
 			// twits=twin+bits
 			int twits = bits & 3L; // 3D=11B
-			//int bitColor[3] = bitColors[twits];
 			bits = bits >> 2;
-			leds.setPixelColor(ledMap[row][col], colorMap[twits][0],colorMap[twits][1], colorMap[twits][2]);
+			leds[ledMap[row][col]] = colorMap[twits];
 		}
 	}
-	//leds.setPixelColor(8, 0,0,255);
-	leds.show();
-	//printReport();
-	delay(200);
+	FastLED.show();
 }
+
+void updateBTParts()
+{
+	unsigned long rem = readTime();
+	for(int i = 0; i < 4; i++)
+	{
+		binTimeParts[i] = rem / partFactors[i];
+		rem -= binTimeParts[i] * partFactors[i];
+		// special handling of hour row
+		if(i == 0)
+		{
+			// day quadrant
+			unsigned long quadiem = binTimeParts[i] / 6L;
+			// use 12 hour clock, and set left-most bits to quadiem
+			binTimeParts[i] = (binTimeParts[i] % 12) + (quadiem << 4);
+		}
+	}
+}
+

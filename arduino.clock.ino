@@ -63,6 +63,7 @@ void setupSerial()
 void setupRtc()
 {
 	rtc.begin(DS13074_SS_PIN);
+	rtc.set24Hour();
 }
 
 void setupLeds()

@@ -1,7 +1,8 @@
 // References:
 // https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library
+// https://learn.sparkfun.com/tutorials/deadon-rtc-breakout-hookup-guide
 
-#define DS13074_CS_PIN 11
+#define DS13074_SS_PIN 11
 #define DS13074_MOSI_PIN 10
 #define DS13074_MISO_PIN 9
 #define DS13074_CLK_PIN 8
@@ -16,7 +17,7 @@ void setup()
 
 void setupRtc()
 {
-	rtc.begin(DS13074_CS_PIN);
+	rtc.begin(DS13074_SS_PIN);
 }
 
 void loop()

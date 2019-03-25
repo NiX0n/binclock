@@ -100,19 +100,26 @@ void renderTime()
 
 void updateBTParts()
 {
-	unsigned long rem = readTime();
-	for(int i = 0; i < 4; i++)
+	rtc.update();
+	uint8_t hour = rtc.hour();
+	uint8_t second = (rtc.minute() * 60) + rtc.second();
+	// day quadrant
+	uint8_t quadiem = hour / 6;
+	btParts[0] = (hour % 12) + (quadiem << 4);
+	
+	unsigned long partFactors[2] = {
+		//60L * 60L,
+		(60L * 60L) / 64L,
+		round(((60L * 60L) / 64L) / 64L)
+	};
+	
+	for(int i = 1; i < 2; i++)
 	{
-		binTimeParts[i] = rem / partFactors[i];
-		rem -= binTimeParts[i] * partFactors[i];
-		// special handling of hour row
-		if(i == 0)
-		{
-			// day quadrant
-			unsigned long quadiem = binTimeParts[i] / 6L;
-			// use 12 hour clock, and set left-most bits to quadiem
-			binTimeParts[i] = (binTimeParts[i] % 12) + (quadiem << 4);
-		}
+		btParts[i] = second / partFactors[i - 1];
+		second -= btParts[i] * partFactors[i - 1];
 	}
+	
+	// @todo consider keeping remainder for purposes of
+	// syncronizing delay()
 }
 

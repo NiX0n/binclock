@@ -1,13 +1,20 @@
 // References:
 // https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library
 // https://learn.sparkfun.com/tutorials/deadon-rtc-breakout-hookup-guide
+// https://playground.arduino.cc/Interfacing/LinuxTTY/
+// stty -F /dev/ttyUSB0 cs8 9600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
+// For piping date into Serial
+// Example: echo "date set $(date -Iseconds)" > /dev/ttyUSB0
+
+
 
 #define DS13074_SS_PIN 11
 #define DS13074_MOSI_PIN 10
 #define DS13074_MISO_PIN 9
 #define DS13074_CLK_PIN 8
 
-#define SERIAL_BAUD 115200
+//#define SERIAL_BAUD 115200i
+#define SERIAL_BAUD 9600
 
 #include <SPI.h>
 #include "SparkFunDS3234RTC.h"
@@ -43,7 +50,7 @@ void loop()
   {
     processIn(in);
   }
-  delay(1000);
+  //delay(5000);
 }
 
 String readSerial()
@@ -51,6 +58,7 @@ String readSerial()
   String ret = "";
   if(Serial.available() > 0)
   {
+    return Serial.readStringUntil("\n");
     digitalWrite(LED_BUILTIN, HIGH);
     do 
     {
@@ -63,11 +71,14 @@ String readSerial()
 
 void processIn(String in)
 {
-  Serial.println("> " + in);
+  Serial.println("> " + in + "\n");
+  //return;
 
   String cmd;
   cmd = "help"; if(in.startsWith(cmd))
   {
+
+    Serial.println("doctor!");
     // printHelp();
     return;
   }
@@ -102,6 +113,8 @@ void setDate(String d)
       posMapISO8601[i][0] + posMapISO8601[i][1]
     ).toInt();
   }
+    Serial.println("setting:" + d);
+
   rtc.setTime((uint8_t)dt[5], (uint8_t)dt[4], (uint8_t)dt[3], 0, (uint8_t)dt[2], (uint8_t)dt[1], (uint8_t)dt[0]);
   Serial.println("SET!");
   printDate();

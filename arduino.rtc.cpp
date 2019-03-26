@@ -1,6 +1,8 @@
 // References:
 // https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library
 // https://learn.sparkfun.com/tutorials/deadon-rtc-breakout-hookup-guide
+// Hard-coded SPI pins
+// https://github.com/arduino/ArduinoCore-avr/blob/b7c607663fecc232e598f2c0acf419ceb0b7078c/variants/standard/pins_arduino.h
 // https://playground.arduino.cc/Interfacing/LinuxTTY/
 // stty -F /dev/ttyUSB0 cs8 9600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
 // For piping date into Serial
@@ -8,10 +10,10 @@
 
 
 
-#define DS13074_SS_PIN 11
-#define DS13074_MOSI_PIN 10
-#define DS13074_MISO_PIN 9
-#define DS13074_CLK_PIN 8
+//#define DS13074_SS_PIN 11
+//#define DS13074_MOSI_PIN 10
+//#define DS13074_MISO_PIN 9
+//#define DS13074_CLK_PIN 8
 
 //#define SERIAL_BAUD 115200i
 #define SERIAL_BAUD 57600
@@ -40,7 +42,7 @@ void setupSerial()
 
 void setupRtc()
 {
-  rtc.begin(DS13074_SS_PIN);
+  rtc.begin(PIN_SPI_SS);
 }
 
 void loop()

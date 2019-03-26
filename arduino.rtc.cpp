@@ -74,7 +74,7 @@ String readSerial()
 
 void processIn(String in)
 {
-  Serial.println("> " + in + "\n");
+  Serial.println("> " + in);
   //return;
 
   String cmd;
@@ -116,7 +116,7 @@ void setDate(String d)
       posMapISO8601[i][0] + posMapISO8601[i][1]
     ).toInt();
   }
-    Serial.println("setting:" + d);
+  Serial.println("setting:" + d);
   //return;
   rtc.setTime((uint8_t)dt[5], (uint8_t)dt[4], (uint8_t)dt[3], 0, (uint8_t)dt[2], (uint8_t)dt[1], (uint8_t)dt[0]);
   Serial.println("SET!");

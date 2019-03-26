@@ -14,7 +14,7 @@
 #define DS13074_CLK_PIN 8
 
 //#define SERIAL_BAUD 115200i
-#define SERIAL_BAUD 9600
+#define SERIAL_BAUD 57600
 
 #include <SPI.h>
 #include "SparkFunDS3234RTC.h"
@@ -50,7 +50,7 @@ void loop()
   {
     processIn(in);
   }
-  //delay(5000);
+  delay(5000);
 }
 
 String readSerial()
@@ -58,11 +58,12 @@ String readSerial()
   String ret = "";
   if(Serial.available() > 0)
   {
-    return Serial.readStringUntil("\n");
+    //return Serial.readStringUntil(";");//"\n");
     digitalWrite(LED_BUILTIN, HIGH);
     do 
     {
       ret += (char)Serial.read();
+      delay(1);
     } while(Serial.available() > 0);
     digitalWrite(LED_BUILTIN, LOW);
   }
@@ -114,7 +115,7 @@ void setDate(String d)
     ).toInt();
   }
     Serial.println("setting:" + d);
-
+  //return;
   rtc.setTime((uint8_t)dt[5], (uint8_t)dt[4], (uint8_t)dt[3], 0, (uint8_t)dt[2], (uint8_t)dt[1], (uint8_t)dt[0]);
   Serial.println("SET!");
   printDate();
@@ -122,7 +123,7 @@ void setDate(String d)
 
 void printDate()
 {
-  char buffer[25];
+  char buffer[64];
   rtc.update();
   sprintf(buffer, "%04d-%02d-%02dT%02d:%02d:%02d-04:00",
     rtc.year(), rtc.month(), rtc.date(),

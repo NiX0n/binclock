@@ -56,15 +56,15 @@ void loop()
 String readSerial()
 {
   String ret = "";
-  if(Serial.available() > 0)
+  while(Serial.available() > 0)
   {
     //return Serial.readStringUntil(";");//"\n");
     digitalWrite(LED_BUILTIN, HIGH);
     do 
     {
       ret += (char)Serial.read();
-      delay(1);
     } while(Serial.available() > 0);
+    delay(1);
     digitalWrite(LED_BUILTIN, LOW);
   }
   return ret;

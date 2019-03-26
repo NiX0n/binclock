@@ -61,13 +61,13 @@ String readSerial()
   while(Serial.available() > 0)
   {
     //return Serial.readStringUntil(";");//"\n");
-    digitalWrite(LED_BUILTIN, HIGH);
+    //digitalWrite(LED_BUILTIN, HIGH);
     do 
     {
       ret += (char)Serial.read();
     } while(Serial.available() > 0);
     delay(1);
-    digitalWrite(LED_BUILTIN, LOW);
+    //digitalWrite(LED_BUILTIN, LOW);
   }
   return ret;
 }

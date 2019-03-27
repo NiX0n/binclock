@@ -4,7 +4,7 @@
 // Hard-coded SPI pins
 // https://github.com/arduino/ArduinoCore-avr/blob/b7c607663fecc232e598f2c0acf419ceb0b7078c/variants/standard/pins_arduino.h
 // https://playground.arduino.cc/Interfacing/LinuxTTY/
-// stty -F /dev/ttyUSB0 cs8 9600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
+// stty -F /dev/ttyUSB0 cs8 57600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
 // For piping date into Serial
 // Example: echo "date set $(date -Iseconds)" > /dev/ttyUSB0
 
@@ -43,6 +43,7 @@ void setupSerial()
 void setupRtc()
 {
   rtc.begin(PIN_SPI_SS);
+  rtc.set24Hour();
 }
 
 void loop()
@@ -118,7 +119,7 @@ void setDate(String d)
   }
   Serial.println("setting:" + d);
   //return;
-  rtc.setTime((uint8_t)dt[5], (uint8_t)dt[4], (uint8_t)dt[3], 0, (uint8_t)dt[2], (uint8_t)dt[1], (uint8_t)dt[0]);
+  rtc.setTime((uint8_t)dt[5], (uint8_t)dt[4], (uint8_t)dt[3], 0, (uint8_t)dt[2], (uint8_t)dt[1], (uint8_t)2019);
   Serial.println("SET!");
   printDate();
 }

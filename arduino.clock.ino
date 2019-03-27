@@ -29,7 +29,7 @@ int ledMap[][3] = {
   // hours
   {6,7,8},
   // min
-  {3,4,5},
+  {5,4,3},
   // sec
   {0,1,2}
 };
@@ -77,7 +77,7 @@ void setupLeds()
 void loop()
 {
   renderTime();
-  delay(250);
+  delay(100);
 }
 
 void renderTime()

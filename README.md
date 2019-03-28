@@ -37,9 +37,14 @@ During prototyping, a virtual environment was used on TinkerCAD, and a series of
 ## Library Dependencies ##
 
 ### [FastLED](https://github.com/FastLED/FastLED) ###
+This library is very simple to use.  Particularly compared to the ones used by Adafruit NeoPixel.
 
-### [SparkFun_DS3234_RTC_Arduino_Library](https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library) ###
+One gotcha is I had to call FastLED.setMaxRefreshRate(LED_REFRESH_RATE), where LED_REFRESH_RATE = some sane value.  Without this line, the LEDs were stuck in a very unusable glitchy state.
+
+### [SparkFun DS3234 RTC](https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library) ###
+I have no complaints about this library on its own; however it does depend on SPI.
 
 ### SPI ###
+This library is mostly transparent to the application.  One gotcha however, is that defined in some arduino_pins.h file, is some hard coded definition of what pins should be used.
 
 ## Source Files ##

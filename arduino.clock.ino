@@ -102,53 +102,39 @@ void renderTime()
 void updateBTParts()
 {
   rtc.update();
+  unsigned long precision = 10000L;
   uint8_t hour = rtc.hour();
-  unsigned long second = ((((unsigned long)rtc.minute()) * 60L) + ((unsigned long)rtc.second())) * 10000L;
- //Serial.println("hour=" + String(hour) + ",sec=" + String(second));
+  unsigned long second = (
+    (((unsigned long)rtc.minute()) * 60L) 
+    + ((unsigned long)rtc.second())
+  ) * precision;
+
+  unsigned long partFactors[3] = {
+    0,
+    (precision * 60L * 60L) / 64L,
+    ((precision * 60L * 60L) / 64L) / 64L,
+    10
+  };
+  
+  for(int i = 0; i < 4; i++)
+  {
+    btParts[i] = second / partFactors[i];
+    second -= btParts[i] * partFactors[i];
+  }
 
   // day quadrant
   uint8_t quadiem = hour / 6;
   btParts[0] = (hour % 12) + (quadiem << 4);
-  
-  unsigned long partFactors[3] = {
-    //60L * 60L,
-    (10000L * 60L * 60L) / 64L,
-    ((10000L * 60L * 60L) / 64L) / 64L,
-    10
-  };
-  
-  for(int i = 1; i < 3; i++)
-  {
-    btParts[i] = second / partFactors[i - 1];
-    second -= btParts[i] * partFactors[i - 1];
-  }
-  //Serial.println("hour=" + String(btParts[0]) + ",sec=" + String(btParts[1]) + ",sec=" + String(btParts[2]));
-  //printReport();
-  // @todo consider keeping remainder for purposes of
-  // syncronizing delay()
 }
 
 
 void printReport()
 {
   char buffer[32];
-  char buffer2[32];
-  char buffer3[32];
-  /*sprintf(buffer2, "Factors Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
-    partFactors[0], partFactors[1],
-    partFactors[2], partFactors[3]
-  );
-  Serial.println(buffer2);
-  memset(buffer2, 0, sizeof(buffer));
-  
-  sprintf(buffer, "time=%lu, math=%lu", time, 26402092L/3600000L);
-  Serial.println(buffer);
-  memset(buffer, 0, sizeof(buffer));
-  */
-  sprintf(buffer3, "Parts Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
+  sprintf(buffer, "Parts Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
     btParts[0] & 15, btParts[1],
     btParts[2], btParts[3]
   );
-  Serial.println(buffer3);
-  memset(buffer3, 0, sizeof(buffer));
+  Serial.println(buffer);
+  memset(buffer, 0, sizeof(buffer));
 }

@@ -15,7 +15,7 @@
 #define LEDS_DATA_PIN 6
 #define LEDS_CLOCK_PIN 7
 #define LED_BRIGHTNESS	64
-#define LED_REFRESH_RATE 64
+#define LED_REFRESH_RATE 1024
 
 #define SERIAL_BAUD 115200
 
@@ -77,6 +77,8 @@ void setupLeds()
 void loop()
 {
 	renderTime();
+	printReport();
+	//delay(20);
 	delay(100);
 }
 
@@ -102,14 +104,14 @@ void renderTime()
 void updateBTParts()
 {
 	rtc.update();
-	unsigned long precision = 1000000L;
 	uint8_t hour = rtc.hour();
+	unsigned long precision = 1000000L;
 	unsigned long second = (
 		(((unsigned long)rtc.minute()) * 60L) 
 		+ ((unsigned long)rtc.second())
 	) * precision;
 
-	unsigned long partFactors[3] = {
+	unsigned long partFactors[4] = {
 		0,
 		(precision * 60L * 60L) / 64L,
 		((precision * 60L * 60L) / 64L) / 64L,
@@ -118,7 +120,7 @@ void updateBTParts()
 	
 	for(int i = 0; i < 4; i++)
 	{
-		btParts[i] = second / partFactors[i];
+		btParts[i] = round(second / partFactors[i]);
 		second -= btParts[i] * partFactors[i];
 	}
 
@@ -132,9 +134,17 @@ void printReport()
 {
 	char buffer[32];
 	sprintf(buffer, "Parts Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
-		btParts[0] & 15, btParts[1],
+		btParts[0] & 15L, btParts[1],
 		btParts[2], btParts[3]
 	);
 	Serial.println(buffer);
-	memset(buffer, 0, sizeof(buffer));
+/*rtc.update();
+char buffer2[32];
+	sprintf(buffer2, "Real Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
+		rtc.hour(), rtc.minute(),
+		rtc.second(), millis()
+	);
+	Serial.println(buffer2);
+	
+	memset(buffer2, 0, sizeof(buffer2));*/
 }

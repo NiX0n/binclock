@@ -102,7 +102,7 @@ void renderTime()
 void updateBTParts()
 {
 	rtc.update();
-	unsigned long precision = 10000L;
+	unsigned long precision = 1000000L;
 	uint8_t hour = rtc.hour();
 	unsigned long second = (
 		(((unsigned long)rtc.minute()) * 60L) 
@@ -113,7 +113,7 @@ void updateBTParts()
 		0,
 		(precision * 60L * 60L) / 64L,
 		((precision * 60L * 60L) / 64L) / 64L,
-		10
+		1000
 	};
 	
 	for(int i = 0; i < 4; i++)

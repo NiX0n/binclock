@@ -120,11 +120,16 @@ void updateBTParts()
 	rtc.update();
 	uint8_t hour = rtc.hour();
 	unsigned long precision = 10000L;
-	unsigned long second = (
-		(((unsigned long)rtc.minute()) * 60L) 
-		+ ((unsigned long)rtc.second())
-	) * precision * 15 / 16;
-	Serial.println("Bits:" + dec2bin(second));
+	unsigned long second = 
+		(
+			(((unsigned long)rtc.minute()) * 60L) 
+			+ ((unsigned long)rtc.second())
+		) 
+		* precision 
+		// 60 / 64 ^ 2
+		* 225L / 256L 
+	;
+	Serial.println(dec2bin(second));
 
 	// day quadrant
 	uint8_t quadiem = hour / 6;
@@ -152,7 +157,7 @@ void updateBTParts()
 String dec2bin(unsigned long dec)
 {
 	String ret = "B";
-	unsigned long mask = 1L << 0x20;
+	unsigned long mask = 1L << 0x1F;
 	for(int i = 0; i < 0x20; i++)
 	{
 		ret += (dec & mask) > 0 ? "1" : "0";

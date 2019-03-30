@@ -85,7 +85,7 @@ void syncMillisOffset()
 
 unsigned int getMillisOffset()
 {
-	return millis() - millisOffset;
+	return (millis() - millisOffset) % 1000L;
 }
 
 void loop()

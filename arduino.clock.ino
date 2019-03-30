@@ -93,7 +93,7 @@ void loop()
 	renderTime();
 	//printReport();
 	//delay(20);
-	delay(100);
+	delay(500);
 }
 
 void renderTime()
@@ -130,6 +130,7 @@ void updateBTParts()
 		* 225L / 256L 
 	;
 	Serial.println(dec2bin(second));
+	return;
 
 	// day quadrant
 	uint8_t quadiem = hour / 6;
@@ -168,20 +169,19 @@ String dec2bin(unsigned long dec)
 
 void printReport()
 {
-	char buffer[32];
+	/*char buffer[100];
 	sprintf(buffer, "Parts Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
 		btParts[0] & 15L, btParts[1],
 		btParts[2], btParts[3]
 	);
 	Serial.println(buffer);
-	memset(buffer, 0, sizeof(buffer));
-/*rtc.update();
-char buffer2[32];
+	//memset(buffer, 0, sizeof(buffer));*/
+	rtc.update();
+	char buffer2[50];
 	sprintf(buffer2, "Real Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
 		rtc.hour(), rtc.minute(),
 		rtc.second(), millis()
 	);
 	Serial.println(buffer2);
-	
-	memset(buffer2, 0, sizeof(buffer2));*/
+	memset(buffer2, 0, sizeof(buffer2));
 }

@@ -23,6 +23,8 @@
 #include "SparkFunDS3234RTC.h"
 #include "FastLED.h"
 
+unsigned long millisOffset = 0;
+
 CRGB leds[N_LEDS];
 
 int ledMap[][3] = {
@@ -74,10 +76,22 @@ void setupLeds()
 	//pinMode(LED_BUILTIN, OUTPUT);
 }
 
+void syncMillisOffset()
+{
+	unsigned long sec = rtc.second();
+	while(sec == rtc.second());
+	millisOffset = millis() % 1000L;
+}
+
+unsigned int getMillisOffset()
+{
+	return millis() - millisOffset;
+}
+
 void loop()
 {
 	renderTime();
-	printReport();
+	//printReport();
 	//delay(20);
 	delay(100);
 }
@@ -105,11 +119,20 @@ void updateBTParts()
 {
 	rtc.update();
 	uint8_t hour = rtc.hour();
-	unsigned long precision = 1000000L;
+	unsigned long precision = 10000L;
 	unsigned long second = (
 		(((unsigned long)rtc.minute()) * 60L) 
 		+ ((unsigned long)rtc.second())
-	) * precision;
+	) * precision * 15 / 16;
+	Serial.println("Bits:" + String(second, BIN));
+
+	// day quadrant
+	uint8_t quadiem = hour / 6;
+	btParts[0] = (hour % 12) + (quadiem << 4);
+	btParts[2] = second & 63L;
+	second = second >> 6;
+	btParts[1] = second & 63L;
+	
 
 	unsigned long partFactors[4] = {
 		0,
@@ -124,9 +147,6 @@ void updateBTParts()
 		second -= btParts[i] * partFactors[i];
 	}
 
-	// day quadrant
-	uint8_t quadiem = hour / 6;
-	btParts[0] = (hour % 12) + (quadiem << 4);
 }
 
 
@@ -138,6 +158,7 @@ void printReport()
 		btParts[2], btParts[3]
 	);
 	Serial.println(buffer);
+	memset(buffer, 0, sizeof(buffer));
 /*rtc.update();
 char buffer2[32];
 	sprintf(buffer2, "Real Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",

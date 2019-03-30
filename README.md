@@ -42,7 +42,11 @@ This library is very simple to use.  Particularly compared to the ones used by A
 One gotcha is I had to call FastLED.setMaxRefreshRate(LED_REFRESH_RATE), where LED_REFRESH_RATE = some sane value.  Without this line, the LEDs were stuck in a very unusable glitchy state.
 
 ### [SparkFun DS3234 RTC](https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library) ###
-I have no complaints about this library on its own; however it does depend on SPI.
+I have no complaints about this library on its own; however it does depend on SPI which has its own issues.
+
+Because this unit only time resolution down to the second, and our "binary second" requires higher precision; the RTC is only used to initialize a time offset during setup().  In loop(), the clock relies on millis() + offset to drive time.  While this isn't idal in terma of keeping in sync with RTC; it does maintain well timed and consistent counting.
+
+Implementations utilizing only the RTC has resulted in skipped seconds.
 
 ### SPI ###
 This library is mostly transparent to the application.  One gotcha however, is that defined in some arduino_pins.h file, is some hard coded definition of what pins should be used.

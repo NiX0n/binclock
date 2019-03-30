@@ -91,7 +91,7 @@ unsigned int getMillisOffset()
 void loop()
 {
 	renderTime();
-	//printReport();
+	printReport();
 	//delay(20);
 	delay(500);
 }
@@ -179,8 +179,8 @@ void printReport()
 	rtc.update();
 	char buffer2[50];
 	sprintf(buffer2, "Real Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
-		rtc.hour(), rtc.minute(),
-		rtc.second(), millis()
+		(unsigned long)rtc.hour(), (unsigned long)rtc.minute(),
+		(unsigned long)rtc.second(), millis()
 	);
 	Serial.println(buffer2);
 	memset(buffer2, 0, sizeof(buffer2));

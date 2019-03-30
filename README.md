@@ -47,4 +47,30 @@ I have no complaints about this library on its own; however it does depend on SP
 ### SPI ###
 This library is mostly transparent to the application.  One gotcha however, is that defined in some arduino_pins.h file, is some hard coded definition of what pins should be used.
 
-## Source Files ##
+## Source Files ##  
+There are multiple separate "arduino.\*" files.  Each has a unique purpose, and most are for the purposes of isolated diagnostics.
+
+### arduino.clock.ino ###
+This is the primary source file for driving the LED clock.
+
+### arduino.rtc.cpp ###
+This file is used for getting and setting time.  It leverages the serial interface as a means of efficiently setting the time.
+
+From a terminal you can run
+```
+$ stty -F /dev/ttyUSB0 -hupcl
+$ echo "date set $(date -Iseconds)" > /dev/ttyUSB0
+```
+
+From Serial Monitor there are two commands you can run
+
+| Command             | Description |
+| ------------------- | ----------- |
+| date get            | Get the current datetime.  If RTC isn't connected or set, this will return zeros for all date/time parts. |
+| date set {datetime} | Set the current date/time.  {datetime} is expected to be in ISO-8601 format |
+
+### arduino.leds.cpp ###
+This file is for doing diagnostics on the LEDs.
+
+### arduino.io.cpp ###
+This file is for doing diagnostics on Serial input/output processing.

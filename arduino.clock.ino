@@ -23,8 +23,6 @@
 #include "SparkFunDS3234RTC.h"
 #include "FastLED.h"
 
-unsigned long millisOffset = 0;
-
 CRGB leds[N_LEDS];
 
 int ledMap[][3] = {
@@ -48,7 +46,16 @@ unsigned long colorMap[4] = {
 	0x0000FF
 };
 
+unsigned long millisOffset = 0;
+
 unsigned long btParts[4] = {0,0,0,0};
+unsigned long btFactors[4] = {
+	1000L * 60L * 60L,
+	(1000L * 60L * 60L) / 64L,
+	round(((1000L * 60L * 60L) / 64L) / 64L)//,
+	//1L
+};
+
 
 void setup()
 {
@@ -66,7 +73,7 @@ void setupRtc()
 {
 	rtc.begin(PIN_SPI_SS);
 	rtc.set24Hour();
-	syncMillisOffset();
+	updateMillisOffset();
 }
 
 void setupLeds()
@@ -77,18 +84,20 @@ void setupLeds()
 	//pinMode(LED_BUILTIN, OUTPUT);
 }
 
-void syncMillisOffset()
+void updateMillisOffset()
 {
 	rtc.update();
-	uint8_t sec = rtc.second();
-	unsigned long ms;
-	// WARNING: This will infinite-loop if RTC doesn't actually update()
-	while(sec == rtc.second())
-	{
-		rtc.update();
-		ms = millis();
-	}
-	millisOffset = ms % 1000L;
+	millisOffset = 
+		(rtc.hour() * btFactors[0])
+		+ (rtc.minute() * btFactors[1])
+		+ (rtc.second() * btFactors[2])
+	;
+}
+
+unsigned long getTime()
+{
+	// keep time under 24 hours
+	return (millisOffset + millis()) % (24L * btFactors[0]);
 }
 
 unsigned int getMillisOffset()
@@ -99,7 +108,7 @@ unsigned int getMillisOffset()
 void loop()
 {
 	renderTime();
-	printReport();
+	//printReport();
 	//delay(20);
 	delay(100);
 	//delay(btParts[3] > 0 ? btParts[3] : 879);
@@ -118,7 +127,6 @@ void renderTime()
 			int twits = bits & 3L; // 3D=11B
 			bits = bits >> 2;
 			leds[ledMap[row][col]] = colorMap[twits];
-			//Serial.println(String(colorMap[twits], HEX));
 		}
 	}
 	FastLED.show();
@@ -126,40 +134,20 @@ void renderTime()
 
 void updateBTParts()
 {
-	rtc.update();
-	uint8_t hour = rtc.hour();
-	unsigned long precision = 10000L;
-	unsigned long second = 
-		(
-			(((unsigned long)rtc.minute()) * 60L) 
-			+ ((unsigned long)rtc.second())
-		) 
-		* precision 
-		+ (getMillisOffset() * precision / 1000L)
-	;
-	//Serial.println(dec2bin(second));
-	//return;
-
-	//btParts[2] = second & 63L;
-	//second = second >> 6;
-	//btParts[1] = second & 63L;
-	
-
-	unsigned long partFactors[4] = {
-		0,
-		(precision * 60L * 60L) / 64L,
-		((precision * 60L * 60L) / 64L) / 64L,
-		10
-	};
-	
+	unsigned long rem = getTime();
 	for(int i = 0; i < 4; i++)
 	{
-		btParts[i] = round(second / partFactors[i]);
-		second -= btParts[i] * partFactors[i];
+		btParts[i] = rem / btFactors[i];
+		rem -= btParts[i] * btFactors[i];
+		// special handling of hour row
+		if(i == 0)
+		{
+			// day quadrant
+			unsigned long quadiem = btParts[i] / 6L;
+			// use 12 hour clock, and set left-most bits to quadiem
+			btParts[i] = (btParts[i] % 12) + (quadiem << 4);
+		}
 	}
-	// day quadrant
-	uint8_t quadiem = hour / 6;
-	btParts[0] = (hour % 12) + (quadiem << 4);
 }
 
 String dec2bin(unsigned long dec)

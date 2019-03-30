@@ -152,10 +152,11 @@ void updateBTParts()
 String dec2bin(unsigned long dec)
 {
 	String ret = "B";
+	unsigned long mask = 1L << 0x20;
 	for(int i = 0; i < 0x20; i++)
 	{
-		ret += (dec & 1) > 0 ? "1" : "0";
-		dec = dec >> 1;
+		ret += (dec & mask) > 0 ? "1" : "0";
+		dec = dec << 1;
 	}
 	return ret;
 }

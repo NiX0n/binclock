@@ -4,7 +4,7 @@
 // Hard-coded SPI pins
 // https://github.com/arduino/ArduinoCore-avr/blob/b7c607663fecc232e598f2c0acf419ceb0b7078c/variants/standard/pins_arduino.h
 // https://playground.arduino.cc/Interfacing/LinuxTTY/
-// stty -F /dev/ttyUSB0 cs8 57600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
+// stty -F /dev/ttyUSB0 -hupcl
 // For piping date into Serial
 // Example: echo "date set $(date -Iseconds)" > /dev/ttyUSB0
 

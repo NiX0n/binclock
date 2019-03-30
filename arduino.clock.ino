@@ -81,25 +81,28 @@ void syncMillisOffset()
 {
 	rtc.update();
 	uint8_t sec = rtc.second();
+	unsigned long ms;
 	// WARNING: This will infinite-loop if RTC doesn't actually update()
 	while(sec == rtc.second())
 	{
 		rtc.update();
+		ms = millis();
 	}
-	millisOffset = millis() % 1000L;
+	millisOffset = ms % 1000L;
 }
 
 unsigned int getMillisOffset()
 {
-	return (millis() - millisOffset) % 1000L;
+	return (millis()  % 1000L) - millisOffset;
 }
 
 void loop()
 {
 	renderTime();
-	//printReport();
+	printReport();
 	//delay(20);
 	delay(100);
+	//delay(btParts[3] > 0 ? btParts[3] : 879);
 }
 
 void renderTime()
@@ -137,19 +140,16 @@ void updateBTParts()
 	//Serial.println(dec2bin(second));
 	//return;
 
-	// day quadrant
-	uint8_t quadiem = hour / 6;
-	btParts[0] = (hour % 12) + (quadiem << 4);
-	btParts[2] = second & 63L;
-	second = second >> 6;
-	btParts[1] = second & 63L;
+	//btParts[2] = second & 63L;
+	//second = second >> 6;
+	//btParts[1] = second & 63L;
 	
 
 	unsigned long partFactors[4] = {
 		0,
 		(precision * 60L * 60L) / 64L,
 		((precision * 60L * 60L) / 64L) / 64L,
-		1000
+		10
 	};
 	
 	for(int i = 0; i < 4; i++)
@@ -157,7 +157,9 @@ void updateBTParts()
 		btParts[i] = round(second / partFactors[i]);
 		second -= btParts[i] * partFactors[i];
 	}
-
+	// day quadrant
+	uint8_t quadiem = hour / 6;
+	btParts[0] = (hour % 12) + (quadiem << 4);
 }
 
 String dec2bin(unsigned long dec)
@@ -174,7 +176,7 @@ String dec2bin(unsigned long dec)
 
 void printReport()
 {
-	/*char buffer[100];
+	char buffer[100];
 	sprintf(buffer, "Parts Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
 		btParts[0] & 15L, btParts[1],
 		btParts[2], btParts[3]

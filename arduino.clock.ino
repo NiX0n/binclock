@@ -97,9 +97,9 @@ unsigned int getMillisOffset()
 void loop()
 {
 	renderTime();
-	printReport();
+	//printReport();
 	//delay(20);
-	delay(500);
+	delay(100);
 }
 
 void renderTime()

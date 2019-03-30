@@ -66,6 +66,7 @@ void setupRtc()
 {
 	rtc.begin(PIN_SPI_SS);
 	rtc.set24Hour();
+	syncMillisOffset();
 }
 
 void setupLeds()
@@ -78,8 +79,13 @@ void setupLeds()
 
 void syncMillisOffset()
 {
-	unsigned long sec = rtc.second();
-	while(sec == rtc.second());
+	rtc.update();
+	uint8_t sec = rtc.second();
+	// WARNING: This will infinite-loop if RTC doesn't actually update()
+	while(sec == rtc.second())
+	{
+		rtc.update();
+	}
 	millisOffset = millis() % 1000L;
 }
 
@@ -126,11 +132,10 @@ void updateBTParts()
 			+ ((unsigned long)rtc.second())
 		) 
 		* precision 
-		// 60 / 64 ^ 2
-		* 225L / 256L 
+		+ (getMillisOffset() * precision / 1000L)
 	;
-	Serial.println(dec2bin(second));
-	return;
+	//Serial.println(dec2bin(second));
+	//return;
 
 	// day quadrant
 	uint8_t quadiem = hour / 6;

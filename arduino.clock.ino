@@ -1,16 +1,3 @@
-
-// References:
-// Clock
-// https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library
-// https://learn.sparkfun.com/tutorials/deadon-rtc-breakout-hookup-guide
-// LEDs
-// https://learn.sparkfun.com/tutorials/lumenati-hookup-guide
-
-//#define DS13074_SS_PIN 11
-//#define DS13074_MOSI_PIN 10
-//#define DS13074_MISO_PIN 9
-//#define DS13074_CLK_PIN 8
-
 #define N_LEDS 9
 #define LEDS_DATA_PIN 6
 #define LEDS_CLOCK_PIN 7
@@ -52,8 +39,8 @@ unsigned long btParts[4] = {0,0,0,0};
 unsigned long btFactors[4] = {
 	1000L * 60L * 60L,
 	(1000L * 60L * 60L) / 64L,
-	round(((1000L * 60L * 60L) / 64L) / 64L)//,
-	//1L
+	round(((1000L * 60L * 60L) / 64L) / 64L),
+	1L
 };
 
 
@@ -81,7 +68,6 @@ void setupLeds()
 	FastLED.addLeds<APA102, LEDS_DATA_PIN, LEDS_CLOCK_PIN, BGR>(leds, N_LEDS);
 	FastLED.setBrightness(LED_BRIGHTNESS);
 	FastLED.setMaxRefreshRate(LED_REFRESH_RATE);
-	//pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void updateMillisOffset()
@@ -100,18 +86,10 @@ unsigned long getTime()
 	return (millisOffset + millis()) % (24L * btFactors[0]);
 }
 
-unsigned int getMillisOffset()
-{
-	return (millis()  % 1000L) - millisOffset;
-}
-
 void loop()
 {
 	renderTime();
-	//printReport();
-	//delay(20);
 	delay(100);
-	//delay(btParts[3] > 0 ? btParts[3] : 879);
 }
 
 void renderTime()
@@ -148,35 +126,4 @@ void updateBTParts()
 			btParts[i] = (btParts[i] % 12) + (quadiem << 4);
 		}
 	}
-}
-
-String dec2bin(unsigned long dec)
-{
-	String ret = "B";
-	unsigned long mask = 1L << 0x1F;
-	for(int i = 0; i < 0x20; i++)
-	{
-		ret += (dec & mask) > 0 ? "1" : "0";
-		dec = dec << 1;
-	}
-	return ret;
-}
-
-void printReport()
-{
-	char buffer[100];
-	sprintf(buffer, "Parts Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
-		btParts[0] & 15L, btParts[1],
-		btParts[2], btParts[3]
-	);
-	Serial.println(buffer);
-	//memset(buffer, 0, sizeof(buffer));*/
-	rtc.update();
-	char buffer2[50];
-	sprintf(buffer2, "Real Hours=%lu, Mins=%lu, Secs=%lu, MS=%lu",
-		(unsigned long)rtc.hour(), (unsigned long)rtc.minute(),
-		(unsigned long)rtc.second(), millis()
-	);
-	Serial.println(buffer2);
-	memset(buffer2, 0, sizeof(buffer2));
 }

@@ -34,6 +34,13 @@ unsigned long colorMap[4] = {
 };
 
 unsigned long millisOffset = 0;
+unsigned long millisFactors[4] = {
+	1000L * 60L * 60L,
+	1000L * 60L,
+	1000L,
+	1L
+};
+
 
 unsigned long btParts[4] = {0,0,0,0};
 unsigned long btFactors[4] = {
@@ -74,16 +81,16 @@ void updateMillisOffset()
 {
 	rtc.update();
 	millisOffset = 
-		(rtc.hour() * 1000L * 60L * 60L)
-		+ (rtc.minute() * 1000L * 60L)
-		+ (rtc.second() * 1000L)
+		(rtc.hour() * millisFactors[0])
+		+ (rtc.minute() * millisFactors[1])
+		+ (rtc.second() * millisFactors[2])
 	;
 }
 
 unsigned long getTime()
 {
 	// keep time under 24 hours
-	return (millisOffset + millis()) % (24L * btFactors[0]);
+	return (millisOffset + millis()) % (24L * millisFactors[0]);
 }
 
 void loop()

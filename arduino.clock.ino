@@ -88,9 +88,9 @@ void updateMillisOffset()
 {
 	rtc.update();
 	millisOffset = 
-		(rtc.hour() * btFactors[0])
-		+ (rtc.minute() * btFactors[1])
-		+ (rtc.second() * btFactors[2])
+		(rtc.hour() * 1000L * 60L * 60L)
+		+ (rtc.minute() * 1000L * 60L)
+		+ (rtc.second() * 1000L)
 	;
 }
 

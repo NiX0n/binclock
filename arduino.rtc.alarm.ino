@@ -77,10 +77,37 @@ void setupAlarm()
 	{
 		Serial.println("In setupAlarm().  Alarm was set ");
 	}
+	
 	int min = rtc.minute() + 1;
 	int hr = rtc.hour();
-	rtc.setAlarm2(min, hr);
+	rtc.setAlarm1(min, hr);
+	if (rtc.alarm1(false))
+	{
+		Serial.println("In setupAlarm().  Alarm was actually set ");
+	}
 	Serial.println("In setupAlarm().  Alarm is set " + String(hr) + ":" + String(min));
+
+	
+	//void writeToRegister(uint8_t address, uint8_t data);
+	//uint8_t readFromRegister(uint8_t address);
+	uint8_t regval = rtc.readFromRegister(0x0E);
+	Serial.println("In setupAlarm(). Before regval=" + String(regval));
+	// set 00XXX;
+	//uint8_t regval = 29;// original value
+	regval = regval & ~(11 << 3);
+	Serial.println("In setupAlarm(). After regval=" + String(regval));
+	rtc.writeToRegister(0x8E, regval);
+	//rtc.writeSQW(SQW_SQUARE_1);
+	//printHex(regval);
+	
+}
+
+void printHex(uint8_t val)
+{
+	char buffer[64];
+	sprintf(buffer, "%d", val);
+	Serial.println("Hex: ");
+	Serial.println(buffer);
 }
 
 void setupLeds()

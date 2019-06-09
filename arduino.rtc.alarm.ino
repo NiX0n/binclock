@@ -56,6 +56,7 @@ void setup()
 	setupSerial();
 	setupRtc();
 	setupLeds();
+	setupAlarm();
 }
 
 void setupSerial()
@@ -68,6 +69,18 @@ void setupRtc()
 	rtc.begin(PIN_SPI_SS);
 	rtc.set24Hour();
 	updateMillisOffset();
+}
+
+void setupAlarm()
+{
+	if (rtc.alarm1())
+	{
+		Serial.println("In setupAlarm().  Alarm was set ");
+	}
+	int min = rtc.minute() + 1;
+	int hr = rtc.hour();
+	rtc.setAlarm2(min, hr);
+	Serial.println("In setupAlarm().  Alarm is set " + String(hr) + ":" + String(min));
 }
 
 void setupLeds()

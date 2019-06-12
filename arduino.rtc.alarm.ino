@@ -6,6 +6,12 @@
 
 #define SERIAL_BAUD 115200
 
+#define DS3234_CONTROL_RS2  (1<<4)
+#define DS3234_CONTROL_RS1  (1<<3)
+#define DS3234_CONTROL_INTCN (1<<2)
+#define DS3234_CONTROL_A2IE (1<<1)
+#define DS3234_CONTROL_A1IE (1)
+
 #include <SPI.h>
 #include "SparkFunDS3234RTC.h"
 #include "FastLED.h"
@@ -99,6 +105,7 @@ void setupAlarm()
 	// set 00XXX;
 	//uint8_t regval = 29;// original value
 	regval = regval & ~(11 << 3);
+	regval = DS3234_CONTROL_A1IE;
 	Serial.println("In setupAlarm(). After regval=" + String(regval));
 	//rtc.writeToRegister(0x8E, regval);
 	rtc.writeToRegister(DS3234_REGISTER_CONTROL, regval);

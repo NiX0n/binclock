@@ -84,18 +84,7 @@ void setupAlarm()
 	{
 		Serial.println("In setupAlarm().	Alarm was set ");
 	}
-	
-	int min = rtc.minute() + 1;
-	int hr = rtc.hour();
-	//rtc.setAlarm1(min, hr);
-	rtc.update();
-	delay(5000);
-	rtc.update();
-	if (rtc.alarm1(false))
-	{
-		Serial.println("In setupAlarm().	Alarm was actually set ");
-	}
-	Serial.println("In setupAlarm().	Alarm is set " + String(hr) + ":" + String(min));
+
 
 	
 	//void writeToRegister(uint8_t address, uint8_t data);
@@ -106,9 +95,23 @@ void setupAlarm()
 	//uint8_t regval = 29;// original value
 	regval = regval & ~(11 << 3);
 	regval = DS3234_CONTROL_A1IE;
+	regval = 0;
 	Serial.println("In setupAlarm(). After regval=" + String(regval));
 	//rtc.writeToRegister(0x8E, regval);
 	rtc.writeToRegister(DS3234_REGISTER_CONTROL, regval);
+	return;
+	
+	int min = rtc.minute() + 1;
+	int hr = rtc.hour();
+	rtc.setAlarm1(0, min, hr);
+	rtc.update();
+	delay(5000);
+	rtc.update();
+	if (rtc.alarm1(false))
+	{
+		Serial.println("In setupAlarm().	Alarm was actually set ");
+	}
+	Serial.println("In setupAlarm().	Alarm is set " + String(hr) + ":" + String(min));
 	
 	//rtc.writeSQW(SQW_SQUARE_1);
 	//rtc.writeSQW(SQW_SQUARE_8K);
